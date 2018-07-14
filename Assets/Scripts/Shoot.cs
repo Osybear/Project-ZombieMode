@@ -33,8 +33,15 @@ public class Shoot : MonoBehaviour {
 				Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
 				
 				if (Physics.Raycast(ray, out hit)) {
-					Transform objectHit = hit.transform;
-					StartCoroutine(DestroyIndicator(Instantiate(m_Indicator, hit.point, Quaternion.identity)));
+					Transform ObjectHit = hit.transform;
+					GameObject Indicator = Instantiate(m_Indicator, hit.point, Quaternion.identity);
+					StartCoroutine(DestroyIndicator(Indicator));
+
+					if(ObjectHit.name.Contains("Zombie")){
+						ObjectHit.GetComponent<Zombie>().RemoveHealth(1);
+						Indicator.transform.SetParent(hit.transform);
+					}
+
 					Debug.DrawLine(ray.origin, hit.point, Color.red, 1f);
 				}
 			}
