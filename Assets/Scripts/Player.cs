@@ -7,7 +7,7 @@ public class Player : MonoBehaviour {
 
 	public int m_Health;
 	public Text m_HealthText;
-
+	
 	private void Awake() {
 		m_HealthText.text = m_Health.ToString();
 	}
@@ -18,7 +18,8 @@ public class Player : MonoBehaviour {
 		if(m_Health <= 0)
 		{
 			m_Health = 0;
-			Debug.LogError("Game Over");
+			Debug.LogError("GameOver");
+			Debug.Break();
 		}
 		m_HealthText.text = m_Health.ToString();
 	}

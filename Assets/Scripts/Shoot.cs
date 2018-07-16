@@ -11,13 +11,13 @@ public class Shoot : MonoBehaviour {
 	public int m_Ammo;
 	public bool m_Reloading;
 	public float m_ReloadingDelay;
-	public float m_DestroyIndicatorDelay;
-
-	public GameObject m_Indicator;
+	public LayerMask m_LayerMask;
+	public GameObject m_HitMarker;
 	public Text m_AmmoText;
 
 	private void Awake() {
 		m_AmmoText.text = m_Clip + "/"+ m_Ammo;
+		m_HitMarker.SetActive(false);
 	}
 
 	void Update () {
@@ -32,21 +32,17 @@ public class Shoot : MonoBehaviour {
 				RaycastHit hit;
 				Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
 				
-				if (Physics.Raycast(ray, out hit)) {
+				if (Physics.Raycast(ray, out hit, Mathf.Infinity, m_LayerMask)) {
 					Transform ObjectHit = hit.transform;
-					GameObject Indicator = Instantiate(m_Indicator, hit.point, Quaternion.identity);
-					StartCoroutine(DestroyIndicator(Indicator));
-
 					if(ObjectHit.name.Contains("Zombie")){
 						ObjectHit.GetComponent<Zombie>().RemoveHealth(1);
-						Indicator.transform.SetParent(hit.transform);
+						StartCoroutine(Indicator());
 					}
 
 					Debug.DrawLine(ray.origin, hit.point, Color.red, 1f);
 				}
 			}
 		}
-
 	}
 
 	public IEnumerator Reloading(){
@@ -76,8 +72,9 @@ public class Shoot : MonoBehaviour {
 		m_Reloading = false;
 	}
 
-	public IEnumerator DestroyIndicator(GameObject Indicator){
-		yield return new WaitForSeconds(m_DestroyIndicatorDelay);
-		Destroy(Indicator);
+	public IEnumerator Indicator(){
+		m_HitMarker.SetActive(true);
+		yield return new WaitForSeconds(.1f);
+		m_HitMarker.SetActive(false);
 	}
 }
