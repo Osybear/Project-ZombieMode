@@ -30,10 +30,10 @@ public class SpawnManager : MonoBehaviour {
 			ZombiesSpawned++;
 			SpawnPoint SpawnPoint = m_SpawnPoints[Random.Range(0, m_SpawnPoints.Count)];
 			GameObject Prefab = Instantiate(m_ZombiesPrefab, SpawnPoint.transform.position, Quaternion.identity);
-			Zombie Script = Prefab.GetComponent<Zombie>();
-			Script.m_Barricade = SpawnPoint.m_Barricade;
-			Script.m_Player = m_Player;
-			Script.m_SpawnManager = this;
+			Zombie Zombie = Prefab.GetComponent<Zombie>();
+			Zombie.m_Barricade = SpawnPoint.m_Barricade;
+			Zombie.m_Player = m_Player;
+			Zombie.m_SpawnManager = this;
 		}
 	}
 

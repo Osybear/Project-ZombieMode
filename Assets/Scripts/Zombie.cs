@@ -17,13 +17,14 @@ public class Zombie : MonoBehaviour {
 	public string m_Target;
 
 	private void Update() {
-		if(m_Barricade.m_Health > 0)
+		if(m_Barricade != null && m_Barricade.m_Health > 0)
 		{
 			m_Agent.destination = m_Barricade.transform.position;
 			m_Target = "Barricade";
 		}
 		else{
 			m_Agent.destination = m_Player.transform.position;
+			m_Barricade = null;
 			m_Target = "Player";
 		}
 
