@@ -3,18 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Shoot : MonoBehaviour {
+public class Pistol : MonoBehaviour {
 
 	public int m_Clip;
 	public int m_MaxClip;
-	public int m_MaxAmmo;
 	public int m_Ammo;
+	public int m_MaxAmmo;
+	public int m_Damage;
 	public bool m_Reloading;
 	public float m_ReloadingDelay;
 	public LayerMask m_LayerMask;
 	public GameObject m_HitMarker;
 	public Text m_AmmoText;
-
+	
 	private void Awake() {
 		m_AmmoText.text = m_Clip + "/"+ m_Ammo;
 		m_HitMarker.SetActive(false);
@@ -24,7 +25,6 @@ public class Shoot : MonoBehaviour {
 		if(!m_Reloading && Input.GetKeyDown(KeyCode.R)){
 			StartCoroutine(Reloading());
 		}
-
 		if(m_Clip > 0 && !m_Reloading){
 			if(Input.GetMouseButtonDown(0)){
 				m_Clip--;
@@ -35,10 +35,9 @@ public class Shoot : MonoBehaviour {
 				if (Physics.Raycast(ray, out hit, Mathf.Infinity, m_LayerMask)) {
 					Transform ObjectHit = hit.transform;
 					if(ObjectHit.name.Contains("Zombie")){
-						ObjectHit.GetComponent<Zombie>().RemoveHealth(1);
-						StartCoroutine(Indicator());
+						ObjectHit.GetComponent<Zombie>().RemoveHealth(m_Damage);
+						StartCoroutine(HitmarkerIndicator());
 					}
-
 					Debug.DrawLine(ray.origin, hit.point, Color.red, 1f);
 				}
 			}
@@ -72,7 +71,7 @@ public class Shoot : MonoBehaviour {
 		m_Reloading = false;
 	}
 
-	public IEnumerator Indicator(){
+	public IEnumerator HitmarkerIndicator(){
 		m_HitMarker.SetActive(true);
 		yield return new WaitForSeconds(.1f);
 		m_HitMarker.SetActive(false);

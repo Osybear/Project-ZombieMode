@@ -58,10 +58,10 @@ public class Zombie : MonoBehaviour {
 
 	public void RemoveHealth(int damage){
 		m_Health -= damage;
-		
 		if(m_Health == 0)
 		{
 			m_SpawnManager.ZombieDied();
+			m_Player.AddPoints(10);
 			Destroy(gameObject);
 		}
 	}
